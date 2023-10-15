@@ -15,10 +15,28 @@ class Channel:
         self.channel_info = self.get_service().channels().list(id=self.__channel_id, part="snippet,statistics").execute()
         self.title = self.channel_info["items"][0]["snippet"]["title"]
         self.video_count = self.channel_info["items"][0]["statistics"]["videoCount"]
-        self.url = "https://www.youtube.com/" + self.channel_info["items"][0]["snippet"]["customUrl"]
+        self.url = "https://www.youtube.com/channel/" + self.__channel_id
         self.description = self.channel_info["items"][0]["snippet"]["description"]
-        self.channel_subscribers = self.channel_info["items"][0]["statistics"]["subscriberCount"]
+        self.channel_subscribers = int(self.channel_info["items"][0]["statistics"]["subscriberCount"])
         self.channel_views = self.channel_info["items"][0]["statistics"]["viewCount"]
+
+    def __str__(self) -> str:
+        return f'{self.title} ({self.url})'
+
+    def __add__(self, other) -> int:
+        return self.channel_subscribers + other.channel_subscribers
+
+    def __sub__(self, other):
+        return self.channel_subscribers - other.channel_subscribers
+
+    def __gt__(self, other):
+        return self.channel_subscribers > other.channel_subscribers
+
+    def __ge__(self, other):
+        return self.channel_subscribers >= other.channel_subscribers
+
+    def __eq__(self, other):
+        return self.channel_subscribers == other.channel_subscribers
 
     def print_info(self) -> None:
         """Выводит в консоль информацию о канале."""
